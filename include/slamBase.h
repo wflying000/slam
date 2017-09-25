@@ -36,9 +36,9 @@ struct RESULT_OF_PNP{
 };
 
 
-PointCloud::Ptr image2PointCloud(cv::Mat &rgb, cv::Mat &depth, CAMERA_INTRINSIC_PARAMETERS camera);
+PointCloud::Ptr image2PointCloud(cv::Mat &rgb, cv::Mat &depth, CAMERA_INTRINSIC_PARAMETERS camera);//图像转换为点云
 
-
+cv::Point3f point2dTo3d(cv::Point3f &point, CAMERA_INTRINSIC_PARAMETERS camera);//像素坐标转换为相机坐标
 
 
 
