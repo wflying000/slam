@@ -1,5 +1,6 @@
 #include<fstream>
 #include<vector>
+#inlude<map>
 using namespace std;
 
 #include<Eigen/Core>
@@ -23,11 +24,11 @@ struct CAMERA_INTRINSIC_PARAMETERS{
   double cx, cy, fx, fy, scale;
 };
 
-struct Frame{
+struct FRAME{
   int frameID;
   cv::Mat rgb, depth;
-  cv::Mat Desp;
-  vector<cv::KeyPoint> keypoint;
+  cv::Mat desp;
+  vector<cv::KeyPoint> kp;
 };
 
 struct RESULT_OF_PNP{
