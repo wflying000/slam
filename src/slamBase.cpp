@@ -29,7 +29,7 @@ PointCloud::Ptr image2PointCloud(cv::Mat &rgb, cv::Mat &depth, CAMERA_INTRINSIC_
 }
 
 
-Point3f point2dTo3d(cv::Point3f &point, CAMERA_INTRINSIC_PARAMETERS camera)
+Point3f point2dTo3d(cv::Point3f &point, CAMERA_INTRINSIC_PARAMETERS &camera)
 {
     cv::Point3f p;
     p.z = double(point.z) / camera.scale;
@@ -47,7 +47,7 @@ void computeKeyPointAndDesp(FRAME &frame, string detector, string descriptor)
     _detector = cv::FeatureDetector::create(detector.c_str());
     _descriptor = cv::DescriptorExtractor::create(descriptor.c_str());
     
-    if(!_detector||!_descriptor){
+    if(!_detector || !_descriptor){
         cerr<<"Unknown detector or descriptor type!"<<detector<<", "<<descriptor<<endl;
         return;
     }
@@ -58,7 +58,7 @@ void computeKeyPointAndDesp(FRAME &frame, string detector, string descriptor)
 }
 
 
-RESULT_OF_PNP estiamteMotion(FRAME &frame1, FRAME &frame2, CAMERA_INTRINSIC_PARAMETERS &camera)
+RESULT_OF_PNP estimateMotion(FRAME &frame1, FRAME &frame2, CAMERA_INTRINSIC_PARAMETERS &camera)
 {
     static ParameterReader pd;
     vector<cv::DMatch> matches;
