@@ -36,12 +36,13 @@ struct RESULT_OF_PNP{
 };
 
 
-PointCloud::Ptr image2PointCloud(cv::Mat &rgb, cv::Mat &depth, CAMERA_INTRINSIC_PARAMETERS camera);  //图像转换为点云
+PointCloud::Ptr image2PointCloud(cv::Mat &rgb, cv::Mat &depth, CAMERA_INTRINSIC_PARAMETERS &camera);  //图像转换为点云
 
-cv::Point3f point2dTo3d(cv::Point3f &point, CAMERA_INTRINSIC_PARAMETERS camera);  //像素坐标转换为相机坐标
+cv::Point3f point2dTo3d(cv::Point3f &point, CAMERA_INTRINSIC_PARAMETERS &camera);  //像素坐标转换为相机坐标
 
 void computeKeyPointAndDesp(FRAME &frame, string detector, string descriptor);  //计算关键点和描述子
 
+RESULT_OF_PNP estimateMotion(FRAME &frame1, FRAME &frame2, CAMERA_INTRINSIC_PARAMETERS &camera);  //计算两帧之间的运动
 
 
 
