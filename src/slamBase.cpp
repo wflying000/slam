@@ -37,3 +37,24 @@ Point3f point2dTo3d(cv::Point3f &point, CAMERA_INTRINSIC_PARAMETERS camera)
     p.y = (point.y - camera.cy) * p.z / camera.fy;
     return p;
 }
+
+
+void computeKeyPointAndDesp(FRAME &frame, string detector, string descriptor)
+{
+    cv::Ptr<FeatureDetector> _detector;
+    cv::Ptr<DescriptorExtractor> _descriptor;
+    
+    _detector = cv::FeatureDetector::create(detector.c_str());
+    _descriptor = cv::DescriptorExtractor::create(descriptor.c_str());
+    
+    if(!_detector||!_descriptor){
+        cerr<<"Unknown detector or descriptor type!"<<detector<<", "<<descriptor<<endl;
+        return;
+    }
+    
+    _detector->detect(frame.rgb, frame.kp);
+    _descriptor->compute(frame.rgb, frame.kp, frame.desp);
+    return;
+}
+
+
