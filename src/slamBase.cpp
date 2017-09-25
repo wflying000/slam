@@ -58,3 +58,75 @@ void computeKeyPointAndDesp(FRAME &frame, string detector, string descriptor)
 }
 
 
+RESULT_OF_PNP estiamteMotion(FRAME &frame1, FRAME &frame2, CAMERA_INTRINSIC_PARAMETERS &camera)
+{
+    static ParameterReader pd;
+    vector<cv::DMatch> matches;
+    cv::BFMatcher matcher;
+    matcher.match(frame1.desp, frame2.desp, matches);
+    
+    RESULT_OF_PNP result;
+    vector<cv::DMatch> goodmatches;
+    double minDis = 99999.0;
+    double good_match_threshold = atof(pd.getData("good_match_threshold").s_str());
+    
+    for(size_t i=0; i<matches.size(); i++){
+        if(matches[i].distance<minDis)
+            minDis=matches[i].distance;
+    }
+    
+    if(minDis<10)
+        minDis=10;
+    
+    for(size_t i=0; i<matches.size(); i++){
+        if(matches[i].distance<good_match_threshold*minDis)
+            goodmatches.push_back(matches[i]);
+    }
+    
+    if(goodmatches.size()<5){
+        result.inliers = -1;
+        return result;
+    }
+    
+    vector<cv::Point3f> pts_obj;
+    vector<cv::Point2f> pts_img;
+    
+    for(size_t i=0; i<goodmatches.size(); i++){
+        cv::Point2f p = frame1.kp[goodmatches[i].queryIdx].pt;
+        ushort d = frame1.depth.ptr<ushort>(int(p.y))[int(p.x)];
+        if(d==0)
+            continue;
+        cv::Point3f pt(p.x, p.y, d);
+        cv::Point3d pd = point2dTo3d(pt, camera);
+        pts_obj.push_back(pd);
+        
+        pts_img.push_back(cv::Point2f(frame2.kp[goodmatches[i].trainIdx].pt));
+    }
+    
+    if(pts_obj.size()==0 || pts_img.size()==0){
+        result.inliers = -1;
+        return result;
+    }
+    
+    double camera_matrix_data[3][3] = {
+        {camera.fx, 0, camera.cx},
+        {0, camera.fy, camera.cy},
+        {0,0,1}
+    };
+    
+    cv::Mat cameraMatrix(3,3,CV_64F, camera_matrix_data); //构建相机矩阵
+    cv::Mat rvec, tvec, inliers;
+    
+    cv::solvePnPRansac(pts_obj, pts_img, cameraMatrix, cv::Mat(), rvec, tvec, false, 100, 1.0, 100, inliers);
+    
+    result.rvec = rvec;
+    result.tvec = tvec;
+    result.inliers = inliers;
+    
+    return result;
+}
+
+
+
+
+
