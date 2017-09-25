@@ -31,14 +31,16 @@ struct Frame{
 };
 
 struct RESULT_OF_PNP{
-  cv::Mat rvec, tvec;
+  cv::Mat rvec, tvec; //旋转向量和位移向量
   int inliers;
 };
 
 
-PointCloud::Ptr image2PointCloud(cv::Mat &rgb, cv::Mat &depth, CAMERA_INTRINSIC_PARAMETERS camera);//图像转换为点云
+PointCloud::Ptr image2PointCloud(cv::Mat &rgb, cv::Mat &depth, CAMERA_INTRINSIC_PARAMETERS camera);  //图像转换为点云
 
-cv::Point3f point2dTo3d(cv::Point3f &point, CAMERA_INTRINSIC_PARAMETERS camera);//像素坐标转换为相机坐标
+cv::Point3f point2dTo3d(cv::Point3f &point, CAMERA_INTRINSIC_PARAMETERS camera);  //像素坐标转换为相机坐标
+
+void computeKeyPointAndDesp(FRAME &frame1, FRAME &frame2, CAMERA_INTRINSIC_PARAMETERS camera);  //计算关键点和描述子
 
 
 
