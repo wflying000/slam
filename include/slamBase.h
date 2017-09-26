@@ -45,5 +45,7 @@ void computeKeyPointAndDesp(FRAME &frame, string detector, string descriptor);  
 
 RESULT_OF_PNP estimateMotion(FRAME &frame1, FRAME &frame2, CAMERA_INTRINSIC_PARAMETERS &camera);  //计算两帧之间的运动
 
+Eigen::Isometry3d cvMat2Eigen(cv::Mat &rvec, cv::Mat &tvec);
+
 
 
