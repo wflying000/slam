@@ -45,7 +45,7 @@ void computeKeyPointAndDesp(FRAME &frame, string detector, string descriptor);  
 
 RESULT_OF_PNP estimateMotion(FRAME &frame1, FRAME &frame2, CAMERA_INTRINSIC_PARAMETERS &camera);  //计算两帧之间的运动
 
-Eigen::Isometry3d cvMat2Eigen(cv::Mat &rvec, cv::Mat &tvec);
+Eigen::Isometry3d cvMat2Eigen(cv::Mat &rvec, cv::Mat &tvec);  //将cv::Mat格式表示的旋转向量rvec和平移向量tvec，转换成Eigen::Isometry3d格式的旋转矩阵T
 
-
+PointCloud::Ptr joinPointCloud(PointCloud::Ptr original, FRAME &newFrame, Eigen::Isometry3d T, CAMERA_INTRINSIC_PARAMETERS &camera);
 
