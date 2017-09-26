@@ -146,5 +146,20 @@ Eigen::Isometry3d cvMat2Eigen(cv::Mat &rvec, cv::Mat &tvec)
 }
 
 
-
+PointCloud::Ptr joinPointCloud(PointCloud::Ptr original, FRAME &newFrame, Eigen::Isometry3d T, CAMERA_INTRINSIC_PARAMETERS &camera)
+{
+    PointCloud::Ptr newCloud = image2PointCloud(newFrame.rgb, newFrame.depth, camera);
+    PointCloud::Ptr output(new PointCloud());
+    pcl::transformPointCloud(*original, *output, T.matrix());
+    *newcloud += *output;
+   
+    static pcl::VoxelGrid<PointT> voxel;
+    static ParameterReader pd;
+    double gridsize = atof(pd.getData("voxel_grid").c_str());
+    voxel.setLeafSize(gridsize, gridsize, gridsize);
+    voxel.setInputCloud(newCloud);
+    PointCloud::Ptr tmp(new PointCloud());
+    voxel.filter(*tmp);
+    return tmp;
+}
 
